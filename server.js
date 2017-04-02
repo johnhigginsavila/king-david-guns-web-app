@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-//var db = require('./server/database/database');
+var db = require('./server/database/database');
 var jwt = require('jsonwebtoken');
 
 process.env.SECRET = "MY SUPER SECRET KEY";
@@ -15,13 +15,19 @@ app.use('/client', express.static(__dirname+'/client'));
 
 
 //Routers
+var databaseTesting = require('./server/routes/databaseTesting');
 
+app.use('/databaseTesting',databaseTesting);
 
 //Routes
 app.get('/', function(req, res){
-    res.send("It is working");
+    res.sendFile(__dirname+'/client/index.html');
 })
 
-app.listen(3000, function(){
-    console.log("Listening on port "+3000);
+
+
+db.sync().then(function(){
+    app.listen(5000, function(){
+        console.log("Listening to port "+5000);
+    })
 })
